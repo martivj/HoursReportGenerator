@@ -1,3 +1,13 @@
+# Report generation
 pandas>=2.0.0
 openpyxl>=3.1.0
 pywin32>=306
+
+# Flask app
+flask[async]==3.0.0
+flask==3.0.0
+flask-limiter==3.5.0
+flask-wtf==1.2.1
+python-dotenv==1.0.0
+werkzeug==3.0.0
+hypercorn==0.15.0

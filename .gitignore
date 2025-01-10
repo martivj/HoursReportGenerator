@@ -28,3 +28,6 @@ data/*
 !data/.gitkeep
 .conda/
 .venv/
+*.env
+temp/
+logs/

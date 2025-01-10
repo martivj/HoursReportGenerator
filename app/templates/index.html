@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hours Report Generator</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center gap-3 mb-6">
+            <img src="{{ url_for('static', filename='logo.svg') }}" alt="Hours Report Generator" class="w-10 h-10">
+            <h1 class="text-2xl font-bold">Hours Report Generator</h1>
+        </div>
+
+        <form id="uploadForm" class="space-y-6" data-max-files="{{ config.MAX_FILES }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+            <!-- Project Type selection -->
+            <div>
+                <label class="block mb-2">Project Type:</label>
+                <select name="config" class="w-full p-2 border rounded">
+                    {% for config in configs %}
+                    <option value="{{ config.key }}">{{ config.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Add filename input -->
+            <div>
+                <label class="block mb-2">Output Filename:</label>
+                <input type="text" id="outputFilename" class="w-full p-2 border rounded" placeholder="HoursReport"
+                    pattern="^[a-zA-Z0-9-_\s]+$" title="Only letters, numbers, spaces, hyphens and underscores allowed"
+                    value="">
+            </div>
+
+            <!-- Drag & drop area -->
+            <div id="dropZone"
+                class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors">
+                <p>Drag & drop CSV files here or click to select</p>
+                <p class="text-sm text-gray-500 mt-2">Maximum 10 files</p>
+                <input type="file" multiple accept=".csv" class="hidden" id="fileInput">
+            </div>
+
+            <!-- File list -->
+            <div id="fileList" class="space-y-2"></div>
+
+            <!-- Submit button -->
+            <button type="submit"
+                class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">
+                Generate Report
+            </button>
+        </form>
+    </div>
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const form = document.getElementById('uploadForm');
+
+        // Drag & drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500');
+
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
+        });
+
+        // Click to select
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            handleFiles(files);
+        });
+
+        let currentFiles = new Map(); // Store files with unique IDs
+
+        function handleFiles(newFiles) {
+            const maxFiles = parseInt(form.dataset.maxFiles);
+
+            // Check if adding these files would exceed the limit
+            if (currentFiles.size + newFiles.length > maxFiles) {
+                alert(`Maximum ${maxFiles} files allowed`);
+                return;
+            }
+
+            // Add new files to storage
+            newFiles.forEach(file => {
+                const fileId = crypto.randomUUID();
+                currentFiles.set(fileId, file);
+                addFileToList(file, fileId);
+            });
+        }
+
+        function addFileToList(file, fileId) {
+            const item = document.createElement('div');
+            item.className = 'flex items-center justify-between p-2 bg-gray-50 rounded';
+            item.innerHTML = `
+        <span>${file.name}</span>
+        <button type="button" class="text-red-500" data-file-id="${fileId}">&times;</button>
+    `;
+
+            // Add click handler for remove button
+            item.querySelector('button').addEventListener('click', () => {
+                currentFiles.delete(fileId);
+                item.remove();
+            });
+
+            fileList.appendChild(item);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            const formData = new FormData();
+            formData.append('config', form.config.value);
+            formData.append('filename', document.getElementById('outputFilename').value || 'HoursReport');
+
+            // Add all current files
+            for (const file of currentFiles.values()) {
+                formData.append('files', file);
+            }
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                    },
+                    credentials: 'same-origin'
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const outputFilename = document.getElementById('outputFilename').value || 'HoursReport';
+                    a.download = `${outputFilename}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    const error = await response.json();
+                    alert(error.error);
+                }
+            } catch (err) {
+                alert('Failed to generate report');
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+
+</html>
