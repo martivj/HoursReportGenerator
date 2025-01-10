@@ -9,19 +9,20 @@ from src.types.project_config import ProjectConfig
 
 
 class ReportGenerator:
-
     def __init__(
         self,
         config: ProjectConfig,
         total_sheet_first: bool = True,
         close_open_excel: bool = True,
+        data_dir: Path = None,
     ):
         self.config = config
         self.total_sheet_first = total_sheet_first
         self.close_open_excel = close_open_excel
+
+        # Use provided paths or defaults
         self._script_dir = Path(__file__).parent.parent
-        self._data_dir = self._script_dir / "data"
-        self._reports_dir = self._script_dir / "reports"
+        self._data_dir = data_dir or (self._script_dir / "data")
 
         # Pre-defined color schemes (primary, secondary)
         self.COLOR_SCHEMES = [
@@ -81,19 +82,21 @@ class ReportGenerator:
 
         return processed_data
 
-    def generate(self, output_filename: str) -> None:
-        """Generate the Excel report with the given filename"""
+    def generate(self, output_path: str) -> None:
+        """Generate the Excel report at the specified path"""
         processed_data = self._process_csv_files()
 
-        wb = Workbook()
-        output_path = self._reports_dir / output_filename
-
-        formatter = ExcelFormatter(
-            wb=wb,
-            data=processed_data,
-            output_path=str(output_path),
-            total_sheet_first=self.total_sheet_first,
-            close_open_excel=self.close_open_excel,
-        )
-
-        formatter.format()
+        wb = None
+        try:
+            wb = Workbook()
+            formatter = ExcelFormatter(
+                wb=wb,
+                data=processed_data,
+                output_path=str(output_path),
+                total_sheet_first=self.total_sheet_first,
+                close_open_excel=self.close_open_excel,
+            )
+            formatter.format()
+        finally:
+            if wb:
+                wb.close()
