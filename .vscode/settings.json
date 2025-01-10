@@ -1,0 +1,19 @@
+{
+  // Set Git Bash as the default terminal on Windows
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  // Git validation and settings
+  "git.inputValidation": true,
+  "git.inputValidationSubjectLength": 50,
+  "git.inputValidationLength": 72,
+  "git.autofetch": true,
+  // Formatting settings
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  // Other
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": true,
+    "scminput": false
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-python.black-formatter",
+    "ms-vsliveshare.vsliveshare",
+    "github.copilot",
+    "pomdtr.excalidraw-editor",
+    "mechatroner.rainbow-csv",
+  ]
+}
