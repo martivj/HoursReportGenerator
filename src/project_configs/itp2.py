@@ -4,6 +4,11 @@ from src.types.project_config import ProjectConfig, ProjectPart
 
 
 class ITP2Config(ProjectConfig):
+
+    @property
+    def display_name(self) -> str:
+        return "IT2901 ITP2"
+
     def get_project_parts(self) -> List[ProjectPart]:
         return [
             # Preliminary Report

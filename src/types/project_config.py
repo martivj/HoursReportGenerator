@@ -6,6 +6,12 @@ from src.types.dataclasses import ProjectPart
 
 
 class ProjectConfig(ABC):
+    @property
+    @abstractmethod
+    def display_name(self) -> str:
+        """Return the display name of the project"""
+        pass
+
     @abstractmethod
     def get_project_parts(self) -> List[ProjectPart]:
         """Return list of project parts with their date ranges"""

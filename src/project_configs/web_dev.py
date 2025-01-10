@@ -4,6 +4,10 @@ from src.types.project_config import ProjectConfig, ProjectPart
 
 
 class WebDevConfig(ProjectConfig):
+    @property
+    def display_name(self) -> str:
+        return "IT2810 WebDev"
+
     def get_project_parts(self) -> List[ProjectPart]:
         return [
             # Project 1
