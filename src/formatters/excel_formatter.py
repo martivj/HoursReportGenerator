@@ -126,6 +126,9 @@ class ExcelFormatter:
                 sheet_name = f"{project_info.title} {part_name}"
                 ws = self.wb.create_sheet(title=sheet_name)
 
+                # Set tab color
+                ws.sheet_properties.tabColor = project_info.primary_color
+
                 # Write column headers first (row 2, after title row)
                 for col, header in enumerate(df.columns, start=1):
                     ws.cell(row=2, column=col, value=header)

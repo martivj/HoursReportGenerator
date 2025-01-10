@@ -5,12 +5,14 @@ from app import create_app
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
+from pathlib import Path
 
 app = create_app()
 
-# Configure logging
+# Set up logging and temp directories
 if not app.debug:
-    os.makedirs("logs", exist_ok=True)
+    Path("logs").mkdir(exist_ok=True)
+    Path("temp/uploads").mkdir(parents=True, exist_ok=True)
     file_handler = RotatingFileHandler(
         "logs/app.log",
         maxBytes=10240,
