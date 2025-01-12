@@ -6,9 +6,9 @@ pywin32>=306; platform_system == "Windows"
 # Flask app
 flask[async]==3.0.0
 flask==3.0.0
-flask-limiter==3.5.0
 flask-wtf==1.2.1
 python-dotenv==1.0.0
 werkzeug==3.0.0
 hypercorn==0.15.0
 redis>=4.5.0
+flask-limiter>=3.3.0
