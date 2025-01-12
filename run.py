@@ -9,19 +9,50 @@ from pathlib import Path
 
 app = create_app()
 
-# Set up logging and temp directories
-if not app.debug:
+
+# Set up logging configuration
+def configure_logging():
     Path("logs").mkdir(exist_ok=True)
-    Path("temp/uploads").mkdir(parents=True, exist_ok=True)
+
+    # Create formatter
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+
+    # File handler with rotation
     file_handler = RotatingFileHandler(
         "logs/app.log",
-        maxBytes=10240,
+        maxBytes=10 * 1024 * 1024,  # 10MB
         backupCount=10,
+        encoding="utf-8",
     )
-    file_handler.setFormatter(
-        logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
-    )
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+
+    # Stream handler for console output
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    console_handler.setLevel(logging.INFO)
+
+    # Configure Flask app logger
+    app.logger.setLevel(logging.INFO)
     app.logger.addHandler(file_handler)
+    app.logger.addHandler(console_handler)
+
+    # Remove default Flask handler
+    app.logger.removeHandler(
+        default_handler
+        for default_handler in app.logger.handlers
+        if isinstance(default_handler, logging.StreamHandler)
+    )
+
+    app.logger.info("Logging system initialized")
+
+
+# Initialize logging if not in debug mode
+if not app.debug:
+    configure_logging()
+    Path("temp/uploads").mkdir(parents=True, exist_ok=True)
 
 csrf = CSRFProtect(app)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
