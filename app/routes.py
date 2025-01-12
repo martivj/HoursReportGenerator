@@ -2,6 +2,7 @@ import asyncio
 from importlib import import_module
 import inspect
 import io
+import os
 from pathlib import Path
 import shutil
 import uuid
@@ -67,6 +68,55 @@ def index():
         configs=config_options,
         csrf_token=generate_csrf(),  # Use Flask-WTF's token generator
     )
+
+
+@main.route("/health")
+def health_check():
+    """
+    Basic health check endpoint that verifies:
+    1. API is responsive
+    2. Upload directory exists and is writable
+    3. Can access configuration
+    """
+    try:
+        # Log health check attempt
+        current_app.logger.info("Health check initiated")
+
+        upload_dir = current_app.config["UPLOAD_FOLDER"]
+        if not upload_dir.exists() or not os.access(upload_dir, os.W_OK):
+            current_app.logger.error(f"Upload directory not accessible: {upload_dir}")
+            return (
+                jsonify(
+                    {"status": "error", "message": "Upload directory not accessible"}
+                ),
+                500,
+            )
+
+        if not CONFIGS:
+            current_app.logger.error("Project configurations not loaded")
+            return (
+                jsonify(
+                    {"status": "error", "message": "Project configurations not loaded"}
+                ),
+                500,
+            )
+
+        current_app.logger.info(
+            f"Health check successful - Configs loaded: {len(CONFIGS)}, "
+            f"Upload dir: {upload_dir}, Env: {current_app.config['FLASK_ENV']}"
+        )
+        return jsonify(
+            {
+                "status": "healthy",
+                "configs_loaded": len(CONFIGS),
+                "upload_dir": str(upload_dir),
+                "environment": current_app.config["FLASK_ENV"],
+            }
+        )
+
+    except Exception as e:
+        current_app.logger.error(f"Health check failed: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 @main.route("/generate", methods=["POST"])
