@@ -1,6 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import sys
 from app import create_app
 from flask_wtf.csrf import CSRFProtect
 from pathlib import Path
@@ -26,12 +27,13 @@ def configure_logging():
         maxBytes=10 * 1024 * 1024,  # 10MB
         backupCount=10,
         encoding="utf-8",
+        mode="a",  # Open in text mode, not binary
     )
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.INFO)
 
     # Stream handler for console output
-    console_handler = logging.StreamHandler()
+    console_handler = logging.StreamHandler(sys.stdout)  # Explicitly use stdout
     console_handler.setFormatter(formatter)
     console_handler.setLevel(logging.INFO)
 
@@ -41,11 +43,9 @@ def configure_logging():
     app.logger.addHandler(console_handler)
 
     # Remove default Flask handler
-    app.logger.removeHandler(
-        default_handler
-        for default_handler in app.logger.handlers
-        if isinstance(default_handler, logging.StreamHandler)
-    )
+    for handler in app.logger.handlers[:]:
+        if isinstance(handler, logging.StreamHandler):
+            app.logger.removeHandler(handler)
 
     app.logger.info("Logging system initialized")
 
