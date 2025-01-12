@@ -101,16 +101,19 @@ def health_check():
                 500,
             )
 
+        environment = "development" if current_app.debug else "production"
+
         current_app.logger.info(
             f"Health check successful - Configs loaded: {len(CONFIGS)}, "
-            f"Upload dir: {upload_dir}, Env: {current_app.config['FLASK_ENV']}"
+            f"Upload dir: {upload_dir}, Env: {environment}"
         )
+
         return jsonify(
             {
                 "status": "healthy",
                 "configs_loaded": len(CONFIGS),
                 "upload_dir": str(upload_dir),
-                "environment": current_app.config["FLASK_ENV"],
+                "environment": environment,
             }
         )
 

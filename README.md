@@ -23,11 +23,11 @@ pip install -r requirements.txt
 3. Create a `.env` file in the root directory:
 
 ```env
-FLASK_ENV=development
 FLASK_APP=run.py
 SECRET_KEY=your-secret-key-here
 MAX_FILES=10
 UPLOAD_FOLDER=temp/uploads
+REDIS_URL=redis://redis:6379/0
 ```
 
 ## Running the Application
