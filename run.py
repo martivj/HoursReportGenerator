@@ -77,10 +77,10 @@ if __name__ == "__main__":
     import asyncio
     import os
 
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
-
-    # config = Config()
     # port = int(os.environ.get("PORT", 10000))
-    # config.bind = [f"0.0.0.0:{port}"]
-    # asyncio.run(serve(app, config))
+    # app.run(host="0.0.0.0", port=port)
+
+    config = Config()
+    port = int(os.environ.get("PORT", 10000))
+    config.bind = [f"0.0.0.0:{port}"]
+    asyncio.run(serve(app, config))
