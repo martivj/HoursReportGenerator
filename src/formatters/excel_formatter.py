@@ -5,7 +5,6 @@ from openpyxl.utils import get_column_letter
 
 from pandas import DataFrame
 
-import win32com.client as win32
 import subprocess
 
 from typing import List, Dict, Tuple
@@ -57,11 +56,17 @@ class ExcelFormatter:
         }
 
     def _close_excel(self, gracefully: bool = True) -> bool:
-        """Close the running Excel session if it's open.
+        """Close the running Excel session if it's open."""
+        # Skip if not on Windows
+        if not self.close_open_excel:
+            return False
 
-        Returns:
-            bool: True if Excel was running and closed successfully
-        """
+        try:
+            import win32com.client as win32
+        except ImportError:
+            print("win32com not available - Excel closing disabled")
+            return False
+
         print("")
         if gracefully:
             try:
@@ -69,10 +74,8 @@ class ExcelFormatter:
                 excel.Quit()
                 print("Closed running Excel session gracefully.")
                 return True
-            except win32.pywintypes.com_error as e:
-                # -2147221021 is the error code for "Operation unavailable"
-                if e.hresult != -2147221021:
-                    print(f"Failed to close Excel: {e}")
+            except Exception as e:
+                print(f"Failed to close Excel gracefully: {e}")
                 return False
         else:
             try:

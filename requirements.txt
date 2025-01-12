@@ -1,7 +1,7 @@
 # Report generation
 pandas>=2.0.0
 openpyxl>=3.1.0
-pywin32>=306
+pywin32>=306; platform_system == "Windows"
 
 # Flask app
 flask[async]==3.0.0
