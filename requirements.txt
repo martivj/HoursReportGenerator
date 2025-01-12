@@ -11,3 +11,4 @@ flask-wtf==1.2.1
 python-dotenv==1.0.0
 werkzeug==3.0.0
 hypercorn==0.15.0
+redis>=4.5.0

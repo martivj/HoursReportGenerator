@@ -2,10 +2,11 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 from app import create_app
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
 from pathlib import Path
+from flask_limiter.util import get_remote_address
+from flask_limiter import Limiter
+import redis
 
 app = create_app()
 
@@ -57,15 +58,24 @@ if not app.debug:
 csrf = CSRFProtect(app)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
+redis_url = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+redis_client = redis.from_url(redis_url)
+
 limiter = Limiter(
-    app=app, key_func=get_remote_address, default_limits=["200 per day", "50 per hour"]
+    app=app,
+    key_func=get_remote_address,
+    storage_uri=redis_url,
+    storage_options={"client": redis_client},
+    default_limits=["200 per day", "50 per hour"],
 )
 
 if __name__ == "__main__":
     from hypercorn.config import Config
     from hypercorn.asyncio import serve
     import asyncio
+    import os
 
     config = Config()
-    config.bind = ["localhost:5000"]
+    port = int(os.environ.get("PORT", 5000))
+    config.bind = [f"0.0.0.0:{port}"]
     asyncio.run(serve(app, config))
