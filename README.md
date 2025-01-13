@@ -2,9 +2,46 @@
 
 Tool for generating formatted Excel reports from time tracking CSV files.
 
-Note that this tool was initially designed for very specific project structures and will require customization to adapt to other projects. The projects currently supported are the IT2810 Web Development course (2024) and the IT2901 Informatics Project II course (2025) at NTNU.
+Note that this tool was initially designed for specific project structures at NTNU, currently supporting:
+- IT2810 Web Development course (2024)
+- IT2901 Informatics Project II course (2025)
 
-## Setup
+To support other project structures, custom project configurations can be created (see [Creating Custom Project Configs](#creating-custom-project-configs)). Future updates may include a more user-friendly way to create and manage custom project configurations.
+
+## Web Application
+
+The current version of the tool is available online at: [hoursreportgenerator.onrender.com](https://hoursreportgenerator.onrender.com/)
+
+![Web Interface](docs/images/web-interface.png)
+
+### How to Use
+
+1. Select your project type from the dropdown
+2. Enter an optional custom filename for the report
+3. Drag and drop your CSV files or click to select them
+4. Click "Generate Report" to create and download your Excel report
+
+## CSV Format Requirements
+
+The application expects CSV files with the following format:
+
+### Required Columns
+- `startTime`: ISO 8601 datetime string (e.g. "2024-09-05T09:58:00.000000000Z")
+- `duration`: Integer number of minutes (can be wrapped in quotes, e.g. "75")
+- `description`: String description of the session wrapped in triple quotes 
+
+Note: description can contain single quotes but not double quotes
+
+### Example Row
+```csv
+"2024-09-05T09:58:00.000000000Z",75,"""working on issue#45: added 'quote' thing"""
+```
+
+## Local Development
+
+If you want to run the application locally or make changes to the code, follow the instructions below.
+
+### Setup 
 
 1. Create a virtual environment (optional but recommended, you can also use conda):
 
@@ -30,7 +67,7 @@ UPLOAD_FOLDER=temp/uploads
 REDIS_URL=redis://redis:6379/0
 ```
 
-## Running the Application
+### Running the Application
 
 1. Start the Flask server:
 
@@ -42,23 +79,7 @@ python run.py
 
 3. Select your project type, choose CSV files to upload, and generate your report
 
-## CSV Format Requirements
-
-The application expects CSV files with the following format:
-
-### Required Columns
-- `startTime`: ISO 8601 datetime string (e.g. "2024-09-05T09:58:00.000000000Z")
-- `duration`: Integer number of minutes (can be wrapped in quotes, e.g. "75")
-- `description`: String description of the session wrapped in triple quotes 
-
-Note: description can contain single quotes but not double quotes
-
-### Example Row
-```csv
-"2024-09-05T09:58:00.000000000Z",75,"""working on issue#45: added 'quote' thing"""
-```
-
-## Creating Custom Project Configs
+### Creating Custom Project Configs
 
 1. Create a new file in `src/project_configs/` (e.g. `my_project.py`)
 
@@ -98,13 +119,13 @@ See existing configs for examples:
 
 
 
-## Command Line Usage
+### Command Line Usage
 
-You can still use the tool via command line:
+You can also use the tool via command line:
 
 1. Place your CSV files in the `data/` directory
 
-2. Create and run a script (e.g. `main.py`):
+2. Create a script (e.g. `main.py`):
 ```python
 from src.project_configs.web_dev import WebDevConfig
 from src.report_generator import ReportGenerator
@@ -116,6 +137,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+3. Run the script:
+```bash
+python main.py
 ```
 
 ### Report Generator Options
@@ -144,3 +169,6 @@ output_name = "ExampleReport.xlsx"
 output_path = Path("reports") / output_name
 generator.generate(str(output_path))
 ```
+
+## Future Development
+- Interactive UI for creating and editing project configurations
