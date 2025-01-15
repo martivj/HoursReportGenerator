@@ -12,6 +12,12 @@ class ProjectConfig(ABC):
         """Return the display name of the project"""
         pass
 
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        """Return a detailed description of the project config"""
+        pass
+
     @abstractmethod
     def get_project_parts(self) -> List[ProjectPart]:
         """Return list of project parts with their date ranges"""

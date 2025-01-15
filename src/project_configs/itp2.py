@@ -9,6 +9,20 @@ class ITP2Config(ProjectConfig):
     def display_name(self) -> str:
         return "IT2901 ITP2"
 
+    @property
+    def description(self) -> str:
+        return """
+         <p class="text-base text-black font-bold mb-2 not-italic">Configuration for the IT2901 Informatics Project II course</p>
+        <p>Project parts are labeled based on dates and description keywords:</p>
+        <ul class="list-disc pl-5 space-y-1 my-2">
+            <li>Include "Report" in description for report work</li>
+            <li>Include "Self Assessment" in description for self evaluation work</li>
+            <li>Include "Video" in description for video work</li>
+            <li>No keywords given -> assumes code work</li>
+        </ul>
+        <p>Deadlines follow the 2025 spring semester schedule.</p>
+        """
+
     def get_project_parts(self) -> List[ProjectPart]:
         return [
             # Preliminary Report

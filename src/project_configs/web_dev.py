@@ -8,6 +8,18 @@ class WebDevConfig(ProjectConfig):
     def display_name(self) -> str:
         return "IT2810 WebDev"
 
+    @property
+    def description(self) -> str:
+        return """
+        <p class="text-base text-black font-bold mb-2 not-italic">Configuration for the IT2810 Web Development course</p>
+        <p>Project parts are labeled based on dates and description keywords:</p>
+        <ul class="list-disc pl-5 space-y-1 my-2">
+            <li>Start the description with "Peer Review" for peer review work</li>
+            <li>No keywords given -> assumes code work</li>
+        </ul>
+        <p>Deadlines follow the 2024 course schedule.</p>
+        """
+
     def get_project_parts(self) -> List[ProjectPart]:
         return [
             # Project 1
