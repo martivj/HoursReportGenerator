@@ -22,6 +22,23 @@ The current version of the tool is available online at: [hoursreportgenerator.on
 4. Drag and drop your CSV files or click to select them
 5. Click "Generate Report" to create and download your Excel report
 
+### Example Output
+
+The generated Excel report contains both individual sheets for each dataset and a comprehensive summary sheet.
+
+**Summary Sheet**
+Shows total hours, weeks, and averages across all datasets:
+![Report Summary](docs/images/report-example-summary.png)
+
+**Individual Dataset Sheets**
+Detailed breakdown of time entries and weekly statistics for each dataset:
+![Dataset Details](docs/images/report-example-individual.png)
+
+Each dataset gets its own color scheme for easy visual distinction, and the sheets are organized with:
+- Chronological list of all time entries with dates and descriptions
+- Weekly hour totals
+- Summary statistics including total hours and weekly averages
+
 ## CSV Format Requirements
 
 The application expects CSV files with the following format:
@@ -31,12 +48,14 @@ The application expects CSV files with the following format:
 - `duration`: Integer number of minutes (can be wrapped in quotes, e.g. "75")
 - `description`: String description of the session wrapped in triple quotes 
 
-Note: description can contain single quotes but not double quotes
-
 ### Example Row
 ```csv
 "2024-09-05T09:58:00.000000000Z",75,"""working on issue#45: added 'quote' thing"""
 ```
+
+### Notes
+- The description field can contain single quotes but not double quotes
+- Depending on the project configuration, the description may be used to label time entries
 
 ## Local Development
 
