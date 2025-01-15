@@ -26,12 +26,12 @@ The current version of the tool is available online at: [hoursreportgenerator.on
 
 The generated Excel report contains both individual sheets for each dataset and a comprehensive summary sheet.
 
-**Summary Sheet**
-Shows total hours, weeks, and averages across all datasets:
+**Summary Sheet**: Shows total hours, weeks, and averages across all datasets
+
 ![Report Summary](docs/images/report-example-summary.png)
 
-**Individual Dataset Sheets**
-Detailed breakdown of time entries and weekly statistics for each dataset:
+**Individual Dataset Sheets**: Detailed breakdown of time entries and weekly statistics for each dataset
+
 ![Dataset Details](docs/images/report-example-individual.png)
 
 Each dataset gets its own color scheme for easy visual distinction, and the sheets are organized with:
