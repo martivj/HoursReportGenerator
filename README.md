@@ -6,7 +6,7 @@ Note that this tool was initially designed for specific project structures at NT
 - IT2810 Web Development course (2024)
 - IT2901 Informatics Project II course (2025)
 
-To support other project structures, custom project configurations can be created (see [Creating Custom Project Configs](#creating-custom-project-configs)). Future updates may include a more user-friendly way to create and manage custom project configurations.
+To support other project structures, custom project configurations can be created (see [Creating Custom Project Configs](#creating-custom-project-configs)). Future updates may include a more user-friendly way to create and manage custom project configurations in the web interface.
 
 ## Web Application
 
@@ -17,9 +17,10 @@ The current version of the tool is available online at: [hoursreportgenerator.on
 ### How to Use
 
 1. Select your project type from the dropdown
-2. Enter an optional custom filename for the report
-3. Drag and drop your CSV files or click to select them
-4. Click "Generate Report" to create and download your Excel report
+2. Read about the keywords expected in the CSV files
+3. Enter an optional custom filename for the report
+4. Drag and drop your CSV files or click to select them
+5. Click "Generate Report" to create and download your Excel report
 
 ## CSV Format Requirements
 
