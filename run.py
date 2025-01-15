@@ -77,9 +77,11 @@ if __name__ == "__main__":
     import asyncio
     import os
 
+    # For development, use the Flask development server
     # port = int(os.environ.get("PORT", 10000))
-    # app.run(host="0.0.0.0", port=port)
+    # app.run(host="0.0.0.0", port=port, debug=True)
 
+    # For production, use Hypercorn
     config = Config()
     port = int(os.environ.get("PORT", 10000))
     config.bind = [f"0.0.0.0:{port}"]

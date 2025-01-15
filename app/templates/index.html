@@ -20,11 +20,13 @@
             <!-- Project Type selection -->
             <div>
                 <label class="block mb-2">Project Type:</label>
-                <select name="config" class="w-full p-2 border rounded">
+                <select name="config" id="configSelect" class="w-full p-2 border rounded">
                     {% for config in configs %}
-                    <option value="{{ config.key }}">{{ config.name }}</option>
+                    <option value="{{ config.key }}" data-description="{{ config.description }}">{{ config.name }}
+                    </option>
                     {% endfor %}
                 </select>
+                <div id="configDescription" class="mt-2 text-sm text-gray-600 italic"></div>
             </div>
 
             <!-- Add filename input -->
@@ -52,6 +54,17 @@
                 Generate Report
             </button>
         </form>
+        <!-- New More Info section -->
+        <div class="bg-white p-4 rounded-lg shadow-md mt-8 border border-gray-200">
+            <h2 class="text-lg font-semibold mb-2">More Information</h2>
+            <p class="text-gray-600">
+                For more information on how to use this tool, please visit the
+                <a href="https://github.com/martivj/HoursReportGenerator"
+                    class="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer">
+                    GitHub repository
+                </a>
+            </p>
+        </div>
     </div>
     <script>
         const dropZone = document.getElementById('dropZone');
@@ -164,6 +177,19 @@
                 console.error(err);
             }
         });
+    </script>
+    <script>
+        const configSelect = document.getElementById('configSelect');
+        const configDescription = document.getElementById('configDescription');
+
+        function updateDescription() {
+            const selectedOption = configSelect.options[configSelect.selectedIndex];
+            configDescription.innerHTML = selectedOption.dataset.description;
+        }
+
+        configSelect.addEventListener('change', updateDescription);
+        // Show initial description
+        updateDescription();
     </script>
 </body>
 

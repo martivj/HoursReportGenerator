@@ -39,11 +39,14 @@ def load_configs():
                 and issubclass(obj, ProjectConfig)
                 and obj != ProjectConfig
             ):
-
-                # Create config instance to get display name
+                # Create config instance to get display name and description
                 config = obj()
                 key = file_path.stem.lower()
-                configs[key] = {"name": config.display_name, "class": obj}
+                configs[key] = {
+                    "name": config.display_name,
+                    "description": config.description,
+                    "class": obj,
+                }
 
     return configs
 
@@ -62,7 +65,10 @@ def allowed_file(filename):
 
 @main.route("/")
 def index():
-    config_options = [{"key": k, "name": v["name"]} for k, v in CONFIGS.items()]
+    config_options = [
+        {"key": k, "name": v["name"], "description": v["description"]}
+        for k, v in CONFIGS.items()
+    ]
     return render_template(
         "index.html",
         configs=config_options,
