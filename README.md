@@ -6,7 +6,9 @@ Note that this tool was initially designed for specific project structures at NT
 - IT2810 Web Development course (2024)
 - IT2901 Informatics Project II course (2025)
 
-To support other project structures, custom project configurations can be created (see the [Local Development Guide](docs/local-development.md)). Future updates may include a more user-friendly way to create and manage custom project configurations in the web interface.
+To support other project structures, custom project configurations can be created (see the [Local Development Guide](docs/local-development.md)). 
+
+Future updates may include a more user-friendly way to create and manage custom project configurations in the web interface (see [Future Plans](#future-plans)).
 
 ## Web Application
 
@@ -69,5 +71,5 @@ For detailed instructions on setting up and running the application locally, inc
 See the [Local Development Guide](docs/local-development.md).
 
 ## Future Plans
-- Store and manage project configurations in a database
-- Make an interactive UI for creating and editing project configurations
+- [ ] Store and manage project configurations in a database
+- [ ] Make an interactive UI for creating and editing project configurations
